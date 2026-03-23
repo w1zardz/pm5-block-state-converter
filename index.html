@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>PM5 Block State Converter — Bedrock to PocketMine-MP 5 PHP Code Generator</title>
+<meta name="description" content="Free online tool to convert Minecraft Bedrock Edition block states to PocketMine-MP 5 (PM5) PHP code. Generate VanillaBlocks factory code with BlockTraits for custom plugins. Supports stairs, slabs, doors, logs, walls, redstone and 200+ blocks.">
+<meta name="keywords" content="PocketMine-MP, PM5, PocketMine, PMMP, block states, Bedrock Edition, Minecraft, PHP, plugin development, block converter, VanillaBlocks, BlockTraits, Pocket Edition, MCPE, block factory, code generator">
+<meta name="author" content="w1zardz">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://w1zardz.github.io/pm5-block-state-converter/">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="PM5 Block State Converter — Bedrock to PocketMine-MP 5">
+<meta property="og:description" content="Convert Minecraft Bedrock block states to PocketMine-MP 5 PHP code. Generate ready-to-use VanillaBlocks factory code for your PM5 plugins.">
+<meta property="og:url" content="https://w1zardz.github.io/pm5-block-state-converter/">
+<meta property="og:site_name" content="PM5 Block State Converter">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="PM5 Block State Converter — Bedrock to PocketMine-MP 5">
+<meta name="twitter:description" content="Convert Minecraft Bedrock block states to PocketMine-MP 5 PHP code instantly.">
+
+<!-- Yandex -->
+<meta name="yandex-verification" content="">
+
+<!-- JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "PM5 Block State Converter",
+  "description": "Convert Minecraft Bedrock Edition block states to PocketMine-MP 5 PHP code. Generate VanillaBlocks factory code with properties for custom plugins.",
+  "url": "https://w1zardz.github.io/pm5-block-state-converter/",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "w1zardz", "url": "https://github.com/w1zardz" },
+  "about": {
+    "@type": "SoftwareApplication",
+    "name": "PocketMine-MP 5",
+    "url": "https://github.com/pmmp/PocketMine-MP"
+  }
+}
+</script>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0d1117;--surface:#161b22;--surface2:#21262d;--border:#30363d;
+  --text:#e6edf3;--text2:#8b949e;--accent:#58a6ff;--accent2:#1f6feb;
+  --green:#3fb950;--orange:#d29922;--red:#f85149;--purple:#bc8cff;
+  --radius:8px;--shadow:0 2px 8px rgba(0,0,0,.3)
+}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+
+/* Layout */
+.container{max-width:960px;margin:0 auto;padding:0 16px}
+header{background:var(--surface);border-bottom:1px solid var(--border);padding:16px 0;position:sticky;top:0;z-index:100;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);background:rgba(22,27,34,.85)}
+header h1{font-size:1.25rem;font-weight:700;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+header h1 .badge{font-size:.7rem;background:var(--accent2);color:#fff;padding:2px 8px;border-radius:12px;font-weight:500;white-space:nowrap}
+.subtitle{color:var(--text2);font-size:.85rem;margin-top:4px}
+
+/* Hero */
+.hero{padding:32px 0 24px;text-align:center}
+.hero h2{font-size:1.5rem;font-weight:700;margin-bottom:8px;line-height:1.3}
+.hero p{color:var(--text2);max-width:600px;margin:0 auto;font-size:.95rem}
+
+/* Search */
+.search-wrap{position:relative;margin:0 auto 24px;max-width:600px}
+.search-wrap svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text2);pointer-events:none}
+#search{width:100%;padding:12px 12px 12px 40px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1rem;outline:none;transition:border .2s}
+#search:focus{border-color:var(--accent)}
+#search::placeholder{color:var(--text2)}
+.search-hint{color:var(--text2);font-size:.75rem;margin-top:6px;text-align:center}
+.search-count{color:var(--text2);font-size:.8rem;text-align:center;margin-bottom:12px}
+
+/* Categories */
+.categories{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:20px;padding:0 4px}
+.cat-btn{padding:5px 12px;border-radius:16px;border:1px solid var(--border);background:transparent;color:var(--text2);font-size:.8rem;cursor:pointer;transition:all .2s;white-space:nowrap}
+.cat-btn:hover,.cat-btn.active{background:var(--accent2);color:#fff;border-color:var(--accent2)}
+
+/* Block Grid */
+.blocks-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;margin-bottom:32px}
+.block-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px;cursor:pointer;transition:all .15s;user-select:none}
+.block-card:hover{border-color:var(--accent);transform:translateY(-1px);box-shadow:var(--shadow)}
+.block-card.selected{border-color:var(--accent);background:rgba(88,166,255,.08)}
+.block-card .block-name{font-weight:600;font-size:.9rem;margin-bottom:2px}
+.block-card .block-id{color:var(--text2);font-size:.75rem;font-family:"SF Mono",Monaco,Consolas,monospace}
+.block-card .block-cat{color:var(--purple);font-size:.7rem;margin-top:4px}
+
+/* Editor Panel */
+.editor{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:24px;overflow:hidden;display:none}
+.editor.visible{display:block}
+.editor-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.editor-header h3{font-size:1rem;font-weight:600}
+.editor-close{background:none;border:none;color:var(--text2);cursor:pointer;font-size:1.2rem;padding:4px 8px;border-radius:4px}
+.editor-close:hover{color:var(--text);background:var(--surface2)}
+.props{padding:16px}
+.prop-group{margin-bottom:14px}
+.prop-group:last-child{margin-bottom:0}
+.prop-label{font-size:.8rem;color:var(--text2);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.prop-label code{font-family:"SF Mono",Monaco,Consolas,monospace;color:var(--orange);font-size:.75rem}
+.prop-row{display:flex;gap:8px;flex-wrap:wrap}
+.prop-btn{padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:.85rem;cursor:pointer;transition:all .15s;font-family:"SF Mono",Monaco,Consolas,monospace}
+.prop-btn:hover{border-color:var(--accent)}
+.prop-btn.active{background:var(--accent2);color:#fff;border-color:var(--accent2)}
+.prop-range{display:flex;align-items:center;gap:10px}
+.prop-range input[type=range]{flex:1;accent-color:var(--accent);min-width:120px}
+.prop-range .range-val{font-family:"SF Mono",Monaco,Consolas,monospace;color:var(--accent);min-width:24px;text-align:center}
+
+/* Code Output */
+.code-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:24px;overflow:hidden;display:none}
+.code-wrap.visible{display:block}
+.code-header{padding:10px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.code-header span{font-size:.85rem;color:var(--text2)}
+.copy-btn{padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:.8rem;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:6px}
+.copy-btn:hover{border-color:var(--accent);color:var(--accent)}
+.copy-btn.copied{background:var(--green);color:#fff;border-color:var(--green)}
+pre{padding:16px;overflow-x:auto;font-family:"SF Mono",Monaco,Consolas,monospace;font-size:.85rem;line-height:1.7;-webkit-overflow-scrolling:touch}
+.kw{color:var(--purple)}.fn{color:var(--accent)}.str{color:var(--green)}.cm{color:var(--text2)}.cls{color:var(--orange)}.bool{color:var(--red)}.num{color:var(--orange)}
+
+/* Info sections */
+.info-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:20px}
+.info-section h2{font-size:1.15rem;font-weight:700;margin-bottom:12px}
+.info-section h3{font-size:1rem;font-weight:600;margin:16px 0 8px;color:var(--accent)}
+.info-section p,.info-section li{color:var(--text2);font-size:.9rem;line-height:1.7}
+.info-section ul{padding-left:20px;margin:8px 0}
+.info-section code{background:var(--surface2);padding:2px 6px;border-radius:4px;font-size:.8rem;color:var(--orange)}
+
+/* FAQ */
+details{border-bottom:1px solid var(--border);padding:12px 0}
+details:last-child{border-bottom:none}
+summary{cursor:pointer;font-weight:600;font-size:.9rem;list-style:none;display:flex;justify-content:space-between;align-items:center}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";color:var(--text2);font-size:1.1rem;transition:transform .2s}
+details[open] summary::after{content:"-"}
+details p{margin-top:8px;color:var(--text2);font-size:.85rem}
+
+/* Footer */
+footer{border-top:1px solid var(--border);padding:24px 0;text-align:center;color:var(--text2);font-size:.8rem;margin-top:40px}
+footer a{color:var(--accent)}
+
+/* Responsive */
+@media(max-width:600px){
+  .blocks-grid{grid-template-columns:1fr}
+  header h1{font-size:1.05rem}
+  .hero h2{font-size:1.25rem}
+  pre{font-size:.78rem;padding:12px}
+  .categories{gap:4px}
+  .cat-btn{font-size:.72rem;padding:4px 10px}
+}
+@media(min-width:601px) and (max-width:900px){
+  .blocks-grid{grid-template-columns:repeat(2,1fr)}
+}
+
+/* Animations */
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.editor.visible,.code-wrap.visible{animation:fadeIn .2s ease-out}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--text2)}
+
+/* Skip to content for a11y */
+.skip-link{position:absolute;top:-40px;left:0;background:var(--accent);color:#fff;padding:8px;z-index:200;font-size:.9rem}
+.skip-link:focus{top:0}
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header>
+  <div class="container">
+    <h1>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg>
+      PM5 Block State Converter
+      <span class="badge">PocketMine-MP 5</span>
+    </h1>
+    <p class="subtitle">Bedrock Edition block states &rarr; PM5 PHP code</p>
+  </div>
+</header>
+
+<main id="main">
+<div class="container">
+
+<section class="hero">
+  <h2>Convert Bedrock Block States to PM5 PHP Code</h2>
+  <p>Select a block, configure its state properties, and get ready-to-use <code>VanillaBlocks</code> factory PHP code for your PocketMine-MP 5 plugins.</p>
+</section>
+
+<div class="search-wrap">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+  <input type="search" id="search" placeholder="Search blocks... (e.g. stairs, door, oak, redstone)" aria-label="Search blocks">
+  <p class="search-hint">Try: stairs, slab, door, log, wool, copper, torch, rail, lever</p>
+</div>
+
+<div class="categories" id="categories" role="navigation" aria-label="Block categories"></div>
+<div class="search-count" id="searchCount"></div>
+
+<div class="blocks-grid" id="blocksGrid"></div>
+
+<div class="editor" id="editor">
+  <div class="editor-header">
+    <h3 id="editorTitle">Block Properties</h3>
+    <button class="editor-close" id="editorClose" aria-label="Close editor">&times;</button>
+  </div>
+  <div class="props" id="propsContainer"></div>
+</div>
+
+<div class="code-wrap" id="codeWrap">
+  <div class="code-header">
+    <span>Generated PHP Code</span>
+    <button class="copy-btn" id="copyBtn" aria-label="Copy code">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+      Copy
+    </button>
+  </div>
+  <pre><code id="codeOutput"></code></pre>
+</div>
+
+<!-- SEO Content Sections -->
+<section class="info-section">
+  <h2>What Changed in PocketMine-MP 5?</h2>
+  <p>PocketMine-MP 5 (PM5) completely replaced the legacy numeric block IDs and metadata system with a modern <strong>block state property system</strong> based on Bedrock Edition's block states. This means:</p>
+  <ul>
+    <li><strong>No more numeric IDs</strong> — blocks are identified by string identifiers like <code>minecraft:oak_stairs</code></li>
+    <li><strong>No more meta values</strong> — block variants are defined by typed state properties (direction, color, open/closed, etc.)</li>
+    <li><strong>VanillaBlocks factory</strong> — use <code>VanillaBlocks::OAK_STAIRS()</code> instead of <code>Block::get(53, 0)</code></li>
+    <li><strong>Fluent setters</strong> — chain property setters like <code>->setFacing(Facing::NORTH)->setUpsideDown(true)</code></li>
+  </ul>
+
+  <h3>Why Use This Converter?</h3>
+  <p>Writing PM5 block state code manually requires knowing the exact property names, valid values, and the mapping between Bedrock states and PM5 methods. This tool automates the process — just pick a block, set properties visually, and copy the generated PHP code.</p>
+</section>
+
+<section class="info-section">
+  <h2>How to Use Generated Code in Your Plugin</h2>
+  <p>The generated code creates a block instance that you can use anywhere in your PM5 plugin:</p>
+  <pre style="background:var(--surface2);border-radius:6px;margin:12px 0"><code><span class="kw">use</span> <span class="cls">pocketmine\block\VanillaBlocks</span>;
+<span class="kw">use</span> <span class="cls">pocketmine\math\Facing</span>;
+
+<span class="cm">// Place a block in the world</span>
+<span class="fn">$block</span> = <span class="cls">VanillaBlocks</span>::<span class="fn">OAK_STAIRS</span>()
+    -><span class="fn">setFacing</span>(<span class="cls">Facing</span>::<span class="str">NORTH</span>)
+    -><span class="fn">setUpsideDown</span>(<span class="bool">true</span>);
+
+<span class="fn">$world</span>-><span class="fn">setBlock</span>(<span class="fn">$position</span>, <span class="fn">$block</span>);
+</code></pre>
+</section>
+
+<section class="info-section">
+  <h2>Frequently Asked Questions</h2>
+  <details>
+    <summary>What is PocketMine-MP 5?</summary>
+    <p>PocketMine-MP 5 (PM5 / PMMP5) is the latest major version of PocketMine-MP, an open-source server software for Minecraft: Bedrock Edition (formerly Pocket Edition / MCPE). It features a completely rewritten block system using typed state properties instead of legacy numeric IDs.</p>
+  </details>
+  <details>
+    <summary>What are block states in Bedrock Edition?</summary>
+    <p>Block states are named properties that define a block's variant or configuration. For example, stairs have <code>upside_down_bit</code> (flipped or not) and <code>weirdo_direction</code> (which way they face). In PM5, these map to PHP setter methods on block objects.</p>
+  </details>
+  <details>
+    <summary>Can I use this for PM4 or older versions?</summary>
+    <p>No. This tool generates code exclusively for PocketMine-MP 5, which uses the <code>VanillaBlocks</code> factory and typed state properties. PM4 and older versions use the legacy numeric ID + meta system, which is fundamentally different.</p>
+  </details>
+  <details>
+    <summary>Which blocks are supported?</summary>
+    <p>This converter supports 200+ blocks including stairs, slabs, doors, trapdoors, fence gates, buttons, pressure plates, logs, walls, signs, torches, rails, redstone components, crops, colored blocks (wool, concrete, terracotta, glass), copper variants, candles, and many more.</p>
+  </details>
+  <details>
+    <summary>Is this tool open source?</summary>
+    <p>Yes! The source code is available on <a href="https://github.com/w1zardz/pm5-block-state-converter">GitHub</a>. Contributions and suggestions are welcome.</p>
+  </details>
+</section>
+
+</div>
+</main>
+
+<footer>
+  <div class="container">
+    <p>
+      <a href="https://github.com/w1zardz/pm5-block-state-converter">GitHub</a> &middot;
+      <a href="https://github.com/pmmp/PocketMine-MP">PocketMine-MP</a> &middot;
+      Built for the PMMP community
+    </p>
+    <p style="margin-top:6px">Not affiliated with Mojang or Microsoft. Minecraft is a trademark of Mojang Studios.</p>
+  </div>
+</footer>
+
+<script>
+// ===== BLOCK DATABASE =====
+const BLOCKS = [
+// --- Stairs ---
+...(()=>{
+  const woods=["Oak","Spruce","Birch","Jungle","Acacia","Dark Oak","Mangrove","Cherry","Bamboo","Crimson","Warped"];
+  const stones=["Cobblestone","Stone Brick","Mossy Cobblestone","Mossy Stone Brick","Sandstone","Red Sandstone","Smooth Sandstone","Smooth Red Sandstone","Granite","Polished Granite","Diorite","Polished Diorite","Andesite","Polished Andesite","Brick","Nether Brick","Red Nether Brick","End Stone Brick","Prismarine","Dark Prismarine","Prismarine Bricks","Quartz","Smooth Quartz","Purpur","Blackstone","Polished Blackstone","Polished Blackstone Brick","Cut Copper","Exposed Cut Copper","Weathered Cut Copper","Oxidized Cut Copper","Waxed Cut Copper","Waxed Exposed Cut Copper","Waxed Weathered Cut Copper","Waxed Oxidized Cut Copper","Cobbled Deepslate","Polished Deepslate","Deepslate Brick","Deepslate Tile","Mud Brick","Tuff","Polished Tuff","Tuff Brick"];
+  const mk=(name,cat)=>({
+    name:name+" Stairs",
+    id:"minecraft:"+name.toLowerCase().replace(/ /g,"_")+"_stairs",
+    pm5:name.toUpperCase().replace(/ /g,"_")+"_STAIRS",
+    category:cat,
+    props:[
+      {name:"Facing",key:"facing",type:"enum",values:["NORTH","SOUTH","EAST","WEST"],default:"NORTH",bedrock:"weirdo_direction"},
+      {name:"Upside Down",key:"upsideDown",type:"bool",default:false,bedrock:"upside_down_bit"}
+    ]
+  });
+  return [...woods.map(w=>mk(w,"Wood")),...stones.map(s=>mk(s,"Stone"))];
+})(),
+// --- Slabs ---
+...(()=>{
+  const types=["Oak","Spruce","Birch","Jungle","Acacia","Dark Oak","Mangrove","Cherry","Bamboo","Crimson","Warped","Cobblestone","Stone","Stone Brick","Mossy Cobblestone","Mossy Stone Brick","Sandstone","Red Sandstone","Smooth Sandstone","Smooth Red Sandstone","Brick","Nether Brick","Red Nether Brick","End Stone Brick","Prismarine","Dark Prismarine","Prismarine Bricks","Quartz","Smooth Quartz","Purpur","Blackstone","Polished Blackstone","Polished Blackstone Brick","Cut Copper","Exposed Cut Copper","Weathered Cut Copper","Oxidized Cut Copper","Cobbled Deepslate","Polished Deepslate","Deepslate Brick","Deepslate Tile","Mud Brick","Tuff","Polished Tuff","Tuff Brick","Granite","Polished Granite","Diorite","Polished Diorite","Andesite","Polished Andesite"];
+  return types.map(t=>({
+    name:t+" Slab",
+    id:"minecraft:"+t.toLowerCase().replace(/ /g,"_")+"_slab",
+    pm5:t.toUpperCase().replace(/ /g,"_")+"_SLAB",
+    category:t.match(/Oak|Spruce|Birch|Jungle|Acacia|Dark|Mangrove|Cherry|Bamboo|Crimson|Warped/)?"Wood":"Stone",
+    props:[
+      {name:"Slab Type",key:"slabType",type:"enum",values:["BOTTOM","TOP","DOUBLE"],default:"BOTTOM",bedrock:"mc_vertical_half",cls:"SlabType"}
+    ]
+  }));
+})(),
+// --- Doors ---
+...(()=>{
+  const types=["Oak","Spruce","Birch","Jungle","Acacia","Dark Oak","Mangrove","Cherry","Bamboo","Crimson","Warped","Iron"];
+  return types.map(t=>({
+    name:t+" Door",
+    id:"minecraft:"+t.toLowerCase().replace(/ /g,"_")+"_door",
+    pm5:t.toUpperCase().replace(/ /g,"_")+"_DOOR",
+    category:"Functional",
+    props:[
+      {name:"Facing",key:"facing",type:"enum",values:["NORTH","SOUTH","EAST","WEST"],default:"NORTH",bedrock:"mc_cardinal_direction"},
+      {name:"Top Half",key:"top",type:"bool",default:false,bedrock:"upper_block_bit"},
+      {name:"Hinge Right",key:"hingeRight",type:"bool",default:false,bedrock:"door_hinge_bit"},
+      {name:"Open",key:"open",type:"bool",default:false,bedrock:"open_bit"}
+    ]
+  }));
+})(),
+// --- Trapdoors ---
+...(()=>{
+  const types=["Oak","Spruce","Birch","Jungle","Acacia","Dark Oak","Mangrove","Cherry","Bamboo","Crimson","Warped","Iron"];
+  return types.map(t=>({
+    name:t+" Trapdoor",
+    id:"minecraft:"+t.toLowerCase().replace(/ /g,"_")+"_trapdoor",
+    pm5:t.toUpperCase().replace(/ /g,"_")+"_TRAPDOOR",
+    category:"Functional",
+    props:[
+      {name:"Facing",key:"facing",type:"enum",values:["NORTH","SOUTH","EAST","WEST"],default:"NORTH",bedrock:"direction"},
+      {name:"Top",key:"top",type:"bool",default:false,bedrock:"upside_down_bit"},
+      {name:"Open",key:"open",type:"bool",default:false,bedrock:"open_bit"}
+    ]
+  }));
+})(),
+// --- Fence Gates ---
+...(()=>{
+  const types=["Oak","Spruce","Birch","Jungle","Acacia","Dark Oak","Mangrove","Cherry","Bamboo","Crimson","Warped"];
+  return types.map(t=>({
+    name:t+" Fence Gate",
+    id:"minecraft:"+t.toLowerCase().replace(/ /g,"_")+"_fence_gate",
+    pm5:t.toUpperCase().replace(/ /g,"_")+"_FENCE_GATE",
+    category:"Functional",
+    props:[
+      {name:"Facing",key:"facing",type:"enum",values:["NORTH","SOUTH","EAST","WEST"],default:"NORTH",bedrock:"mc_cardinal_direction"},
+      {name:"In Wall",key:"inWall",type:"bool",default:false,bedrock:"in_wall_bit"},
+      {name:"Open",key:"open",type:"bool",default:false,bedrock:"open_bit"}
+    ]
+  }));
+})(),
+// --- Buttons ---
+...(()=>{
+  const types=[["Oak","WOODEN"],["Spruce","SPRUCE"],["Birch","BIRCH"],["Jungle","JUNGLE"],["Acacia","ACACIA"],["Dark Oak","DARK_OAK"],["Mangrove","MANGROVE"],["Cherry","CHERRY"],["Bamboo","BAMBOO"],["Crimson","CRIMSON"],["Warped","WARPED"],["Stone","STONE"],["Polished Blackstone","POLISHED_BLACKSTONE"]];
+  return types.map(([t,pm])=>({
+    name:t+" Button",
+    id:"minecraft:"+t.toLowerCase().replace(/ /g,"_")+"_button",
+    pm5:pm+"_BUTTON",
+    category:"Redstone",
+    props:[
+      {name:"Facing",key:"facing",type:"enum",values:["DOWN","UP","NORTH","SOUTH","WEST","EAST"],default:"NORTH",bedrock:"facing_direction"},
+      {name:"Pressed",key:"pressed",type:"bool",default:false,bedrock:"button_pressed_bit"}
+    ]
+  }));
+})(),
+// --- Pressure Plates ---
+...["Oak","Spruce","Birch","Jungle","Acacia","Dark Oak","Mangrove","Cherry","Bamboo","Crimson","Warped","Stone","Polished Blackstone"].map(t=>({
+  name:t+" Pressure Plate",
+  id:"minecraft:"+t.toLowerCase().replace(/ /g,"_")+"_pressure_plate",
+  pm5:t.toUpperCase().replace(/ /g,"_")+"_PRESSURE_PLATE",
+  category:"Redstone",
+  props:[
+    {name:"Pressed",key:"pressed",type:"bool",default:false,bedrock:"redstone_signal"}
+  ]
+})),
+// --- Weighted Pressure Plates ---
+{name:"Light Weighted Pressure Plate",id:"minecraft:light_weighted_pressure_plate",pm5:"WEIGHTED_PRESSURE_PLATE_LIGHT",category:"Redstone",props:[
+  {name:"Signal Strength",key:"outputSignalStrength",type:"range",min:0,max:15,default:0,bedrock:"redstone_signal"}
+]},
+{name:"Heavy Weighted Pressure Plate",id:"minecraft:heavy_weighted_pressure_plate",pm5:"WEIGHTED_PRESSURE_PLATE_HEAVY",category:"Redstone",props:[
+  {name:"Signal Strength",key:"outputSignalStrength",type:"range",min:0,max:15,default:0,bedrock:"redstone_signal"}
+]},
+// --- Logs ---
+...(()=>{
+  const types=["Oak","Spruce","Birch","Jungle","Acacia","Dark Oak","Mangrove","Cherry"];
+  const out=[];
+  types.forEach(t=>{
+    out.push({name:t+" Log",id:"minecraft:"+t.toLowerCase().replace(/ /g,"_")+"_log",pm5:t.toUpperCase().replace(/ /g,"_")+"_LOG",category:"Wood",
+      props:[{name:"Axis",key:"axis",type:"enum",values:["X","Y","Z"],default:"Y",bedrock:"pillar_axis",cls:"Axis"}]});
+    out.push({name:"Stripped "+t+" Log",id:"minecraft:stripped_"+t.toLowerCase().replace(/ /g,"_")+"_log",pm5:"STRIPPED_"+t.toUpperCase().replace(/ /g,"_")+"_LOG",category:"Wood",
+      props:[{name:"Axis",key:"axis",type:"enum",values:["X","Y","Z"],default:"Y",bedrock:"pillar_axis",cls:"Axis"}]});
+    out.push({name:t+" Wood",id:"minecraft:"+t.toLowerCase().replace(/ /g,"_")+"_wood",pm5:t.toUpperCase().replace(/ /g,"_")+"_WOOD",category:"Wood",
+      props:[{name:"Axis",key:"axis",type:"enum",values:["X","Y","Z"],default:"Y",bedrock:"pillar_axis",cls:"Axis"}]});
+  });
+  return out;
+})(),
+// --- Stems (Nether) ---
+...["Crimson","Warped"].flatMap(t=>[
+  {name:t+" Stem",id:"minecraft:"+t.toLowerCase()+"_stem",pm5:t.toUpperCase()+"_STEM",category:"Wood",
+    props:[{name:"Axis",key:"axis",type:"enum",values:["X","Y","Z"],default:"Y",bedrock:"pillar_axis",cls:"Axis"}]},
+  {name:"Stripped "+t+" Stem",id:"minecraft:stripped_"+t.toLowerCase()+"_stem",pm5:"STRIPPED_"+t.toUpperCase()+"_STEM",category:"Wood",
+    props:[{name:"Axis",key:"axis",type:"enum",values:["X","Y","Z"],default:"Y",bedrock:"pillar_axis",cls:"Axis"}]},
+]),
+// --- Walls ---
+...["Cobblestone","Mossy Cobblestone","Stone Brick","Mossy Stone Brick","Granite","Diorite","Andesite","Sandstone","Red Sandstone","Brick","Nether Brick","Red Nether Brick","End Stone Brick","Prismarine","Blackstone","Polished Blackstone","Polished Blackstone Brick","Cobbled Deepslate","Polished Deepslate","Deepslate Brick","Deepslate Tile","Mud Brick","Tuff","Polished Tuff","Tuff Brick"].map(t=>({
+  name:t+" Wall",id:"minecraft:"+t.toLowerCase().replace(/ /g,"_")+"_wall",pm5:t.toUpperCase().replace(/ /g,"_")+"_WALL",category:"Stone",
+  props:[
+    {name:"Post",key:"post",type:"bool",default:false,bedrock:"wall_post_bit"},
+    {name:"North",key:"connectionNorth",type:"enum",values:["NONE","SHORT","TALL"],default:"NONE",bedrock:"wall_connection_type_north",cls:"WallConnectionType"},
+    {name:"South",key:"connectionSouth",type:"enum",values:["NONE","SHORT","TALL"],default:"NONE",bedrock:"wall_connection_type_south",cls:"WallConnectionType"},
+    {name:"West",key:"connectionWest",type:"enum",values:["NONE","SHORT","TALL"],default:"NONE",bedrock:"wall_connection_type_west",cls:"WallConnectionType"},
+    {name:"East",key:"connectionEast",type:"enum",values:["NONE","SHORT","TALL"],default:"NONE",bedrock:"wall_connection_type_east",cls:"WallConnectionType"}
+  ]
+})),
+// --- Torches ---
+...[["Torch","TORCH"],["Soul Torch","SOUL_TORCH"],["Redstone Torch","REDSTONE_TORCH"]].map(([n,pm])=>({
+  name:n,id:"minecraft:"+n.toLowerCase().replace(/ /g,"_"),pm5:pm,category:"Light",
+  props:[{name:"Facing",key:"facing",type:"enum",values:["UP","NORTH","SOUTH","EAST","WEST"],default:"UP",bedrock:"torch_facing_direction"}]
+})),
+// --- Lanterns ---
+...[["Lantern","LANTERN"],["Soul Lantern","SOUL_LANTERN"]].map(([n,pm])=>({
+  name:n,id:"minecraft:"+n.toLowerCase().replace(/ /g,"_"),pm5:pm,category:"Light",
+  props:[{name:"Hanging",key:"hanging",type:"bool",default:false,bedrock:"hanging"}]
+})),
+// --- Candles ---
+...[{n:"Candle",pm:"CANDLE"},...["White","Orange","Magenta","Light Blue","Yellow","Lime","Pink","Gray","Light Gray","Cyan","Purple","Blue","Brown","Green","Red","Black"].map(c=>({n:c+" Candle",pm:c.toUpperCase().replace(/ /g,"_")+"_CANDLE"}))].map(({n,pm})=>({
+  name:n,id:"minecraft:"+n.toLowerCase().replace(/ /g,"_"),pm5:pm,category:"Light",
+  props:[
+    {name:"Count",key:"count",type:"range",min:1,max:4,default:1,bedrock:"candles"},
+    {name:"Lit",key:"lit",type:"bool",default:false,bedrock:"lit"}
+  ]
+})),
+// --- Colored Blocks ---
+...(()=>{
+  const colors=["White","Orange","Magenta","Light Blue","Yellow","Lime","Pink","Gray","Light Gray","Cyan","Purple","Blue","Brown","Green","Red","Black"];
+  const out=[];
+  const types=[["Wool","WOOL","Colored"],["Concrete","CONCRETE","Colored"],["Concrete Powder","CONCRETE_POWDER","Colored"],["Terracotta","TERRACOTTA","Colored"],["Stained Glass","STAINED_GLASS","Colored"],["Stained Glass Pane","STAINED_GLASS_PANE","Colored"],["Glazed Terracotta","GLAZED_TERRACOTTA","Colored"],["Carpet","CARPET","Colored"],["Shulker Box","SHULKER_BOX","Colored"]];
+  types.forEach(([blockType,pmSuffix,cat])=>{
+    colors.forEach(color=>{
+      const isGlazed = blockType === "Glazed Terracotta";
+      const props = isGlazed ? [{name:"Facing",key:"facing",type:"enum",values:["NORTH","SOUTH","EAST","WEST"],default:"NORTH",bedrock:"mc_cardinal_direction"}] : [];
+      out.push({
+        name:color+" "+blockType,
+        id:"minecraft:"+color.toLowerCase().replace(/ /g,"_")+"_"+blockType.toLowerCase().replace(/ /g,"_"),
+        pm5:color.toUpperCase().replace(/ /g,"_")+"_"+pmSuffix,
+        category:cat,
+        props
+      });
+    });
+  });
+  return out;
+})(),
+// --- Rails ---
+{name:"Rail",id:"minecraft:rail",pm5:"RAIL",category:"Redstone",props:[
+  {name:"Shape",key:"shape",type:"enum",values:["STRAIGHT_NORTH_SOUTH","STRAIGHT_EAST_WEST","ASCENDING_EAST","ASCENDING_WEST","ASCENDING_NORTH","ASCENDING_SOUTH","CURVE_SOUTH_EAST","CURVE_SOUTH_WEST","CURVE_NORTH_WEST","CURVE_NORTH_EAST"],default:"STRAIGHT_NORTH_SOUTH",bedrock:"rail_direction",cls:"RailConnectionType"}
+]},
+...[["Powered Rail","POWERED_RAIL"],["Activator Rail","ACTIVATOR_RAIL"],["Detector Rail","DETECTOR_RAIL"]].map(([n,pm])=>({
+  name:n,id:"minecraft:"+n.toLowerCase().replace(/ /g,"_"),pm5:pm,category:"Redstone",
+  props:[
+    {name:"Shape",key:"shape",type:"enum",values:["STRAIGHT_NORTH_SOUTH","STRAIGHT_EAST_WEST","ASCENDING_EAST","ASCENDING_WEST","ASCENDING_NORTH","ASCENDING_SOUTH"],default:"STRAIGHT_NORTH_SOUTH",bedrock:"rail_direction",cls:"RailConnectionType"},
+    {name:"Powered",key:"powered",type:"bool",default:false,bedrock:"rail_data_bit"}
+  ]
+})),
+// --- Redstone ---
+{name:"Redstone Wire",id:"minecraft:redstone_wire",pm5:"REDSTONE_WIRE",category:"Redstone",props:[
+  {name:"Signal Strength",key:"outputSignalStrength",type:"range",min:0,max:15,default:0,bedrock:"redstone_signal"}
+]},
+{name:"Redstone Repeater",id:"minecraft:repeater",pm5:"REDSTONE_REPEATER",category:"Redstone",props:[
+  {name:"Facing",key:"facing",type:"enum",values:["NORTH","SOUTH","EAST","WEST"],default:"NORTH",bedrock:"mc_cardinal_direction"},
+  {name:"Delay",key:"delay",type:"range",min:1,max:4,default:1,bedrock:"repeater_delay"},
+  {name:"Powered",key:"powered",type:"bool",default:false,bedrock:"powered (in block ID)"}
+]},
+{name:"Redstone Comparator",id:"minecraft:comparator",pm5:"REDSTONE_COMPARATOR",category:"Redstone",props:[
+  {name:"Facing",key:"facing",type:"enum",values:["NORTH","SOUTH","EAST","WEST"],default:"NORTH",bedrock:"mc_cardinal_direction"},
+  {name:"Powered",key:"powered",type:"bool",default:false,bedrock:"output_lit_bit"},
+  {name:"Subtract Mode",key:"subtractMode",type:"bool",default:false,bedrock:"output_subtract_bit"}
+]},
+{name:"Lever",id:"minecraft:lever",pm5:"LEVER",category:"Redstone",props:[
+  {name:"Facing",key:"facing",type:"enum",values:["DOWN_NORTH_SOUTH","DOWN_EAST_WEST","UP_NORTH_SOUTH","UP_EAST_WEST","NORTH","SOUTH","EAST","WEST"],default:"NORTH",bedrock:"lever_direction",cls:"LeverFacing"},
+  {name:"Activated",key:"activated",type:"bool",default:false,bedrock:"open_bit"}
+]},
+{name:"Daylight Sensor",id:"minecraft:daylight_detector",pm5:"DAYLIGHT_SENSOR",category:"Redstone",props:[
+  {name:"Signal Strength",key:"outputSignalStrength",type:"range",min:0,max:15,default:0,bedrock:"redstone_signal"},
+  {name:"Inverted",key:"inverted",type:"bool",default:false,bedrock:"(in block ID)"}
+]},
+{name:"Hopper",id:"minecraft:hopper",pm5:"HOPPER",category:"Redstone",props:[
+  {name:"Facing",key:"facing",type:"enum",values:["DOWN","NORTH","SOUTH","WEST","EAST"],default:"DOWN",bedrock:"facing_direction"},
+  {name:"Powered",key:"powered",type:"bool",default:false,bedrock:"toggle_bit"}
+]},
+{name:"TNT",id:"minecraft:tnt",pm5:"TNT",category:"Redstone",props:[
+  {name:"Unstable",key:"unstable",type:"bool",default:false,bedrock:"explode_bit"}
+]},
+// --- Leaves ---
+...["Oak","Spruce","Birch","Jungle","Acacia","Dark Oak","Mangrove","Cherry","Azalea","Flowering Azalea"].map(t=>({
+  name:t+" Leaves",id:"minecraft:"+t.toLowerCase().replace(/ /g,"_")+"_leaves",pm5:t.toUpperCase().replace(/ /g,"_")+"_LEAVES",category:"Nature",
+  props:[
+    {name:"No Decay",key:"noDecay",type:"bool",default:false,bedrock:"persistent_bit"},
+    {name:"Check Decay",key:"checkDecay",type:"bool",default:false,bedrock:"update_bit"}
+  ]
+})),
+// --- Saplings ---
+...["Oak","Spruce","Birch","Jungle","Acacia","Dark Oak"].map(t=>({
+  name:t+" Sapling",id:"minecraft:"+t.toLowerCase().replace(/ /g,"_")+"_sapling",pm5:t.toUpperCase().replace(/ /g,"_")+"_SAPLING",category:"Nature",
+  props:[{name:"Ready",key:"ready",type:"bool",default:false,bedrock:"age_bit"}]
+})),
+// --- Crops ---
+{name:"Wheat",id:"minecraft:wheat",pm5:"WHEAT",category:"Nature",props:[
+  {name:"Age",key:"age",type:"range",min:0,max:7,default:0,bedrock:"growth"}
+]},
+{name:"Carrots",id:"minecraft:carrots",pm5:"CARROTS",category:"Nature",props:[
+  {name:"Age",key:"age",type:"range",min:0,max:7,default:0,bedrock:"growth"}
+]},
+{name:"Potatoes",id:"minecraft:potatoes",pm5:"POTATOES",category:"Nature",props:[
+  {name:"Age",key:"age",type:"range",min:0,max:7,default:0,bedrock:"growth"}
+]},
+{name:"Beetroot",id:"minecraft:beetroot",pm5:"BEETROOT",category:"Nature",props:[
+  {name:"Age",key:"age",type:"range",min:0,max:7,default:0,bedrock:"growth"}
+]},
+{name:"Nether Wart",id:"minecraft:nether_wart",pm5:"NETHER_WART",category:"Nature",props:[
+  {name:"Age",key:"age",type:"range",min:0,max:3,default:0,bedrock:"age"}
+]},
+{name:"Sweet Berry Bush",id:"minecraft:sweet_berry_bush",pm5:"SWEET_BERRY_BUSH",category:"Nature",props:[
+  {name:"Age",key:"age",type:"range",min:0,max:3,default:0,bedrock:"growth"}
+]},
+{name:"Cocoa",id:"minecraft:cocoa",pm5:"COCOA_POD",category:"Nature",props:[
+  {name:"Facing",key:"facing",type:"enum",values:["NORTH","SOUTH","EAST","WEST"],default:"NORTH",bedrock:"direction"},
+  {name:"Age",key:"age",type:"range",min:0,max:2,default:0,bedrock:"age"}
+]},
+{name:"Cactus",id:"minecraft:cactus",pm5:"CACTUS",category:"Nature",props:[
+  {name:"Age",key:"age",type:"range",min:0,max:15,default:0,bedrock:"age"}
+]},
+{name:"Sugar Cane",id:"minecraft:reeds",pm5:"SUGARCANE",category:"Nature",props:[
+  {name:"Age",key:"age",type:"range",min:0,max:15,default:0,bedrock:"age"}
+]},
+// --- Signs ---
+...["Oak","Spruce","Birch","Jungle","Acacia","Dark Oak","Mangrove","Cherry","Bamboo","Crimson","Warped"].flatMap(t=>[
+  {name:t+" Sign",id:"minecraft:"+t.toLowerCase().replace(/ /g,"_")+"_standing_sign",pm5:t.toUpperCase().replace(/ /g,"_")+"_SIGN",category:"Functional",
+    props:[{name:"Rotation",key:"rotation",type:"range",min:0,max:15,default:0,bedrock:"ground_sign_direction"}]},
+  {name:t+" Wall Sign",id:"minecraft:"+t.toLowerCase().replace(/ /g,"_")+"_wall_sign",pm5:t.toUpperCase().replace(/ /g,"_")+"_WALL_SIGN",category:"Functional",
+    props:[{name:"Facing",key:"facing",type:"enum",values:["NORTH","SOUTH","EAST","WEST"],default:"NORTH",bedrock:"facing_direction"}]}
+]),
+// --- Furnaces / Crafting ---
+...[["Furnace","FURNACE"],["Blast Furnace","BLAST_FURNACE"],["Smoker","SMOKER"]].flatMap(([n,pm])=>[
+  {name:n,id:"minecraft:"+n.toLowerCase().replace(/ /g,"_"),pm5:pm,category:"Functional",
+    props:[
+      {name:"Facing",key:"facing",type:"enum",values:["NORTH","SOUTH","EAST","WEST"],default:"NORTH",bedrock:"mc_cardinal_direction"},
+      {name:"Lit",key:"lit",type:"bool",default:false,bedrock:"(in block ID)"}
+    ]}
+]),
+{name:"Barrel",id:"minecraft:barrel",pm5:"BARREL",category:"Functional",props:[
+  {name:"Facing",key:"facing",type:"enum",values:["DOWN","UP","NORTH","SOUTH","WEST","EAST"],default:"UP",bedrock:"facing_direction"},
+  {name:"Open",key:"open",type:"bool",default:false,bedrock:"open_bit"}
+]},
+{name:"Lectern",id:"minecraft:lectern",pm5:"LECTERN",category:"Functional",props:[
+  {name:"Facing",key:"facing",type:"enum",values:["NORTH","SOUTH","EAST","WEST"],default:"NORTH",bedrock:"mc_cardinal_direction"},
+  {name:"Powered",key:"powered",type:"bool",default:false,bedrock:"powered_bit"}
+]},
+{name:"Stonecutter",id:"minecraft:stonecutter_block",pm5:"STONECUTTER",category:"Functional",props:[
+  {name:"Facing",key:"facing",type:"enum",values:["NORTH","SOUTH","EAST","WEST"],default:"NORTH",bedrock:"mc_cardinal_direction"}
+]},
+{name:"Loom",id:"minecraft:loom",pm5:"LOOM",category:"Functional",props:[
+  {name:"Facing",key:"facing",type:"enum",values:["NORTH","SOUTH","EAST","WEST"],default:"NORTH",bedrock:"direction"}
+]},
+// --- Bed ---
+{name:"Bed",id:"minecraft:bed",pm5:"BED",category:"Functional",props:[
+  {name:"Facing",key:"facing",type:"enum",values:["NORTH","SOUTH","EAST","WEST"],default:"NORTH",bedrock:"direction"},
+  {name:"Head Part",key:"head",type:"bool",default:false,bedrock:"head_piece_bit"},
+  {name:"Occupied",key:"occupied",type:"bool",default:false,bedrock:"occupied_bit"}
+]},
+// --- Chest ---
+{name:"Chest",id:"minecraft:chest",pm5:"CHEST",category:"Functional",props:[
+  {name:"Facing",key:"facing",type:"enum",values:["NORTH","SOUTH","EAST","WEST"],default:"NORTH",bedrock:"mc_cardinal_direction"}
+]},
+{name:"Trapped Chest",id:"minecraft:trapped_chest",pm5:"TRAPPED_CHEST",category:"Functional",props:[
+  {name:"Facing",key:"facing",type:"enum",values:["NORTH","SOUTH","EAST","WEST"],default:"NORTH",bedrock:"mc_cardinal_direction"}
+]},
+{name:"Ender Chest",id:"minecraft:ender_chest",pm5:"ENDER_CHEST",category:"Functional",props:[
+  {name:"Facing",key:"facing",type:"enum",values:["NORTH","SOUTH","EAST","WEST"],default:"NORTH",bedrock:"mc_cardinal_direction"}
+]},
+// --- Misc ---
+{name:"Bell",id:"minecraft:bell",pm5:"BELL",category:"Redstone",props:[
+  {name:"Facing",key:"facing",type:"enum",values:["NORTH","SOUTH","EAST","WEST"],default:"NORTH",bedrock:"direction"},
+  {name:"Attachment",key:"attachmentType",type:"enum",values:["FLOOR","CEILING","SINGLE_WALL","DOUBLE_WALL"],default:"FLOOR",bedrock:"attachment",cls:"BellAttachmentType"}
+]},
+{name:"Campfire",id:"minecraft:campfire",pm5:"CAMPFIRE",category:"Light",props:[
+  {name:"Facing",key:"facing",type:"enum",values:["NORTH","SOUTH","EAST","WEST"],default:"NORTH",bedrock:"mc_cardinal_direction"},
+  {name:"Lit",key:"lit",type:"bool",default:true,bedrock:"extinguished (inverted)"}
+]},
+{name:"Soul Campfire",id:"minecraft:soul_campfire",pm5:"SOUL_CAMPFIRE",category:"Light",props:[
+  {name:"Facing",key:"facing",type:"enum",values:["NORTH","SOUTH","EAST","WEST"],default:"NORTH",bedrock:"mc_cardinal_direction"},
+  {name:"Lit",key:"lit",type:"bool",default:true,bedrock:"extinguished (inverted)"}
+]},
+{name:"End Portal Frame",id:"minecraft:end_portal_frame",pm5:"END_PORTAL_FRAME",category:"Functional",props:[
+  {name:"Facing",key:"facing",type:"enum",values:["NORTH","SOUTH","EAST","WEST"],default:"NORTH",bedrock:"mc_cardinal_direction"},
+  {name:"Has Eye",key:"eye",type:"bool",default:false,bedrock:"end_portal_eye_bit"}
+]},
+{name:"Ladder",id:"minecraft:ladder",pm5:"LADDER",category:"Functional",props:[
+  {name:"Facing",key:"facing",type:"enum",values:["NORTH","SOUTH","EAST","WEST"],default:"NORTH",bedrock:"facing_direction"}
+]},
+{name:"Vine",id:"minecraft:vine",pm5:"VINE",category:"Nature",props:[
+  {name:"North",key:"faceNorth",type:"bool",default:false,bedrock:"vine_direction_bits"},
+  {name:"South",key:"faceSouth",type:"bool",default:false,bedrock:"vine_direction_bits"},
+  {name:"West",key:"faceWest",type:"bool",default:false,bedrock:"vine_direction_bits"},
+  {name:"East",key:"faceEast",type:"bool",default:false,bedrock:"vine_direction_bits"}
+]},
+{name:"Snow Layer",id:"minecraft:snow_layer",pm5:"SNOW_LAYER",category:"Nature",props:[
+  {name:"Layers",key:"layers",type:"range",min:1,max:8,default:1,bedrock:"height"}
+]},
+{name:"Farmland",id:"minecraft:farmland",pm5:"FARMLAND",category:"Nature",props:[
+  {name:"Wetness",key:"wetness",type:"range",min:0,max:7,default:0,bedrock:"moisturized_amount"}
+]},
+{name:"Cake",id:"minecraft:cake",pm5:"CAKE",category:"Functional",props:[
+  {name:"Bites",key:"bites",type:"range",min:0,max:6,default:0,bedrock:"bite_counter"}
+]},
+{name:"Sea Pickle",id:"minecraft:sea_pickle",pm5:"SEA_PICKLE",category:"Nature",props:[
+  {name:"Count",key:"count",type:"range",min:1,max:4,default:1,bedrock:"cluster_count"},
+  {name:"Underwater",key:"underwater",type:"bool",default:true,bedrock:"dead_bit (inverted)"}
+]},
+{name:"Respawn Anchor",id:"minecraft:respawn_anchor",pm5:"RESPAWN_ANCHOR",category:"Functional",props:[
+  {name:"Charges",key:"charges",type:"range",min:0,max:4,default:0,bedrock:"respawn_anchor_charge"}
+]},
+{name:"Bamboo",id:"minecraft:bamboo",pm5:"BAMBOO",category:"Nature",props:[
+  {name:"Ready",key:"ready",type:"bool",default:false,bedrock:"age_bit"},
+  {name:"Thick",key:"thick",type:"bool",default:false,bedrock:"bamboo_stalk_thickness"},
+  {name:"Leaf Size",key:"leafSize",type:"enum",values:["NONE","SMALL","LARGE"],default:"NONE",bedrock:"bamboo_leaf_size"}
+]},
+// --- Liquids ---
+{name:"Water",id:"minecraft:water",pm5:"WATER",category:"Nature",props:[
+  {name:"Decay",key:"decay",type:"range",min:0,max:7,default:0,bedrock:"liquid_depth"},
+  {name:"Falling",key:"falling",type:"bool",default:false,bedrock:"liquid_depth (bit 3)"},
+  {name:"Still",key:"still",type:"bool",default:false,bedrock:"(in block ID)"}
+]},
+{name:"Lava",id:"minecraft:lava",pm5:"LAVA",category:"Nature",props:[
+  {name:"Decay",key:"decay",type:"range",min:0,max:7,default:0,bedrock:"liquid_depth"},
+  {name:"Falling",key:"falling",type:"bool",default:false,bedrock:"liquid_depth (bit 3)"},
+  {name:"Still",key:"still",type:"bool",default:false,bedrock:"(in block ID)"}
+]},
+// --- Fire ---
+{name:"Fire",id:"minecraft:fire",pm5:"FIRE",category:"Nature",props:[
+  {name:"Age",key:"age",type:"range",min:0,max:15,default:0,bedrock:"age"}
+]},
+// --- End Rod / Lightning Rod ---
+{name:"End Rod",id:"minecraft:end_rod",pm5:"END_ROD",category:"Light",props:[
+  {name:"Facing",key:"facing",type:"enum",values:["DOWN","UP","NORTH","SOUTH","WEST","EAST"],default:"UP",bedrock:"facing_direction"}
+]},
+{name:"Lightning Rod",id:"minecraft:lightning_rod",pm5:"LIGHTNING_ROD",category:"Redstone",props:[
+  {name:"Facing",key:"facing",type:"enum",values:["DOWN","UP","NORTH","SOUTH","WEST","EAST"],default:"UP",bedrock:"mc_block_face"}
+]},
+// --- Item Frame ---
+{name:"Item Frame",id:"minecraft:frame",pm5:"ITEM_FRAME",category:"Functional",props:[
+  {name:"Facing",key:"facing",type:"enum",values:["DOWN","UP","NORTH","SOUTH","WEST","EAST"],default:"NORTH",bedrock:"facing_direction"},
+  {name:"Has Map",key:"hasMap",type:"bool",default:false,bedrock:"item_frame_map_bit"}
+]},
+{name:"Glow Item Frame",id:"minecraft:glow_frame",pm5:"GLOWING_ITEM_FRAME",category:"Functional",props:[
+  {name:"Facing",key:"facing",type:"enum",values:["DOWN","UP","NORTH","SOUTH","WEST","EAST"],default:"NORTH",bedrock:"facing_direction"},
+  {name:"Has Map",key:"hasMap",type:"bool",default:false,bedrock:"item_frame_map_bit"}
+]},
+// --- Carved Pumpkin / Jack o'Lantern ---
+{name:"Carved Pumpkin",id:"minecraft:carved_pumpkin",pm5:"CARVED_PUMPKIN",category:"Functional",props:[
+  {name:"Facing",key:"facing",type:"enum",values:["NORTH","SOUTH","EAST","WEST"],default:"NORTH",bedrock:"mc_cardinal_direction"}
+]},
+{name:"Lit Pumpkin",id:"minecraft:lit_pumpkin",pm5:"LIT_PUMPKIN",category:"Light",props:[
+  {name:"Facing",key:"facing",type:"enum",values:["NORTH","SOUTH","EAST","WEST"],default:"NORTH",bedrock:"mc_cardinal_direction"}
+]},
+// --- Simple blocks (no state) ---
+...["Cobblestone","Stone","Granite","Polished Granite","Diorite","Polished Diorite","Andesite","Polished Andesite","Deepslate","Cobbled Deepslate","Polished Deepslate","Deepslate Bricks","Deepslate Tiles","Tuff","Polished Tuff","Tuff Bricks","Calcite","Dripstone Block","Smooth Stone","Bricks","Sandstone","Red Sandstone","Netherrack","Nether Bricks","Red Nether Bricks","Basalt","Smooth Basalt","Blackstone","Polished Blackstone","End Stone","End Stone Bricks","Purpur Block","Prismarine","Dark Prismarine","Prismarine Bricks","Sea Lantern","Glowstone","Obsidian","Crying Obsidian","Bedrock","Dirt","Grass Block","Podzol","Mycelium","Sand","Red Sand","Gravel","Clay","Mud","Packed Mud","Mud Bricks","Moss Block","Moss Carpet","Sculk","Amethyst Block","Budding Amethyst","Glass","Tinted Glass","Ice","Packed Ice","Blue Ice","Snow Block","Dried Kelp Block","Hay Bale","Bone Block","Sponge","Wet Sponge","Melon","Pumpkin","Diamond Block","Gold Block","Iron Block","Emerald Block","Lapis Block","Redstone Block","Coal Block","Copper Block","Netherite Block","Quartz Block","Bookshelf","Crafting Table","Enchanting Table","Anvil","Brewing Stand","Cauldron","Composter","Grindstone","Smithing Table","Cartography Table","Fletching Table","Beacon","Conduit","Lodestone","Dragon Egg","Sponge","Honeycomb Block","Honey Block","Slime Block"].map(n=>({
+  name:n,id:"minecraft:"+n.toLowerCase().replace(/ /g,"_").replace(/'/g,""),pm5:n.toUpperCase().replace(/ /g,"_").replace(/'/g,""),category:
+    n.match(/Dirt|Grass|Sand|Gravel|Clay|Mud|Moss|Podzol|Mycelium|Snow/)?"Nature":
+    n.match(/Diamond|Gold|Iron|Emerald|Lapis|Coal|Copper|Netherite|Amethyst|Redstone Block/)?"Ore":
+    n.match(/Glass|Ice|Lantern|Glowstone/)?"Light":
+    n.match(/Crafting|Enchant|Anvil|Brewing|Cauldron|Compost|Grind|Smith|Cartog|Fletch|Beacon|Conduit|Lodestone|Bookshelf/)?"Functional":"Stone",
+  props:[]
+})),
+// --- Pillar blocks ---
+...["Bone Block","Hay Bale","Basalt","Polished Basalt","Quartz Pillar","Purpur Pillar","Deepslate"].map(n=>({
+  name:n,id:"minecraft:"+n.toLowerCase().replace(/ /g,"_"),pm5:n.toUpperCase().replace(/ /g,"_"),category:"Stone",
+  props:[{name:"Axis",key:"axis",type:"enum",values:["X","Y","Z"],default:"Y",bedrock:"pillar_axis",cls:"Axis"}]
+})),
+// --- Chain ---
+{name:"Chain",id:"minecraft:chain",pm5:"CHAIN",category:"Functional",props:[
+  {name:"Axis",key:"axis",type:"enum",values:["X","Y","Z"],default:"Y",bedrock:"pillar_axis",cls:"Axis"}
+]},
+// --- Fences ---
+...["Oak","Spruce","Birch","Jungle","Acacia","Dark Oak","Mangrove","Cherry","Bamboo","Crimson","Warped","Nether Brick"].map(t=>({
+  name:t+" Fence",id:"minecraft:"+t.toLowerCase().replace(/ /g,"_")+"_fence",pm5:t.toUpperCase().replace(/ /g,"_")+"_FENCE",category:t==="Nether Brick"?"Stone":"Wood",
+  props:[]
+})),
+];
+
+// ===== APP STATE =====
+let selectedBlock = null;
+let blockState = {};
+let activeCategory = "All";
+
+// ===== CATEGORIES =====
+const allCategories = ["All",...[...new Set(BLOCKS.map(b=>b.category))].sort()];
+
+// ===== RENDER =====
+function renderCategories() {
+  const el = document.getElementById("categories");
+  el.innerHTML = allCategories.map(c =>
+    `<button class="cat-btn${c===activeCategory?" active":""}" data-cat="${c}">${c}</button>`
+  ).join("");
+  el.querySelectorAll(".cat-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      activeCategory = btn.dataset.cat;
+      document.getElementById("search").value = "";
+      renderCategories();
+      renderBlocks();
+    });
+  });
+}
+
+function getFilteredBlocks() {
+  const q = document.getElementById("search").value.toLowerCase().trim();
+  let list = BLOCKS;
+  if (activeCategory !== "All") list = list.filter(b => b.category === activeCategory);
+  if (q) list = list.filter(b =>
+    b.name.toLowerCase().includes(q) ||
+    b.id.toLowerCase().includes(q) ||
+    b.pm5.toLowerCase().includes(q.replace(/ /g,"_"))
+  );
+  return list;
+}
+
+function renderBlocks() {
+  const list = getFilteredBlocks();
+  const grid = document.getElementById("blocksGrid");
+  const count = document.getElementById("searchCount");
+  count.textContent = `${list.length} block${list.length !== 1 ? "s" : ""} found`;
+
+  if (list.length > 200) {
+    grid.innerHTML = list.slice(0, 200).map(blockCard).join("") +
+      `<div style="grid-column:1/-1;text-align:center;color:var(--text2);padding:16px">Showing first 200 results. Refine your search to see more.</div>`;
+  } else {
+    grid.innerHTML = list.map(blockCard).join("");
+  }
+
+  grid.querySelectorAll(".block-card").forEach(card => {
+    card.addEventListener("click", () => selectBlock(card.dataset.idx));
+  });
+}
+
+function blockCard(block, idx) {
+  const sel = selectedBlock && selectedBlock.id === block.id ? " selected" : "";
+  const propCount = block.props.length;
+  return `<div class="block-card${sel}" data-idx="${idx}">
+    <div class="block-name">${block.name}</div>
+    <div class="block-id">${block.id}</div>
+    <div class="block-cat">${block.category}${propCount ? ` · ${propCount} propert${propCount>1?"ies":"y"}` : ""}</div>
+  </div>`;
+}
+
+function selectBlock(idx) {
+  const list = getFilteredBlocks();
+  const block = list[idx];
+  if (!block) return;
+  selectedBlock = block;
+  blockState = {};
+  block.props.forEach(p => {
+    blockState[p.key] = p.default;
+  });
+  renderBlocks();
+  renderEditor();
+  generateCode();
+  document.getElementById("editor").scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+
+function renderEditor() {
+  const editor = document.getElementById("editor");
+  const title = document.getElementById("editorTitle");
+  const container = document.getElementById("propsContainer");
+
+  if (!selectedBlock) {
+    editor.classList.remove("visible");
+    return;
+  }
+
+  editor.classList.add("visible");
+  title.textContent = selectedBlock.name + " Properties";
+
+  if (selectedBlock.props.length === 0) {
+    container.innerHTML = `<p style="color:var(--text2);font-size:.9rem">This block has no configurable state properties. The generated code uses the default state.</p>`;
+    return;
+  }
+
+  container.innerHTML = selectedBlock.props.map(prop => {
+    let control = "";
+    if (prop.type === "bool") {
+      control = `<div class="prop-row">
+        <button class="prop-btn${blockState[prop.key]===false?" active":""}" data-key="${prop.key}" data-val="false">false</button>
+        <button class="prop-btn${blockState[prop.key]===true?" active":""}" data-key="${prop.key}" data-val="true">true</button>
+      </div>`;
+    } else if (prop.type === "enum") {
+      control = `<div class="prop-row">${prop.values.map(v =>
+        `<button class="prop-btn${blockState[prop.key]===v?" active":""}" data-key="${prop.key}" data-val="${v}">${v}</button>`
+      ).join("")}</div>`;
+    } else if (prop.type === "range") {
+      control = `<div class="prop-range">
+        <input type="range" min="${prop.min}" max="${prop.max}" value="${blockState[prop.key]}" data-key="${prop.key}">
+        <span class="range-val">${blockState[prop.key]}</span>
+      </div>`;
+    }
+    return `<div class="prop-group">
+      <div class="prop-label">${prop.name} <code>${prop.bedrock}</code></div>
+      ${control}
+    </div>`;
+  }).join("");
+
+  // Event listeners
+  container.querySelectorAll(".prop-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const key = btn.dataset.key;
+      let val = btn.dataset.val;
+      const prop = selectedBlock.props.find(p => p.key === key);
+      if (prop.type === "bool") val = val === "true";
+      blockState[key] = val;
+      renderEditor();
+      generateCode();
+    });
+  });
+
+  container.querySelectorAll('input[type=range]').forEach(input => {
+    input.addEventListener("input", () => {
+      const key = input.dataset.key;
+      blockState[key] = parseInt(input.value);
+      input.nextElementSibling.textContent = input.value;
+      generateCode();
+    });
+  });
+}
+
+function generateCode() {
+  const wrap = document.getElementById("codeWrap");
+  const output = document.getElementById("codeOutput");
+
+  if (!selectedBlock) {
+    wrap.classList.remove("visible");
+    return;
+  }
+
+  wrap.classList.add("visible");
+
+  const uses = new Set();
+  uses.add("pocketmine\\block\\VanillaBlocks");
+
+  let chain = "";
+  selectedBlock.props.forEach(prop => {
+    const val = blockState[prop.key];
+    if (prop.type === "bool") {
+      const setter = "set" + prop.key.charAt(0).toUpperCase() + prop.key.slice(1);
+      chain += `\n    ->${setter}(${val})`;
+    } else if (prop.type === "enum") {
+      const setter = "set" + prop.key.charAt(0).toUpperCase() + prop.key.slice(1);
+      const cls = prop.cls || "Facing";
+      if (cls === "Facing") uses.add("pocketmine\\math\\Facing");
+      else if (cls === "Axis") uses.add("pocketmine\\math\\Axis");
+      else if (cls === "SlabType") uses.add("pocketmine\\block\\utils\\SlabType");
+      else if (cls === "WallConnectionType") uses.add("pocketmine\\block\\utils\\WallConnectionType");
+      else if (cls === "BellAttachmentType") uses.add("pocketmine\\block\\utils\\BellAttachmentType");
+      else if (cls === "LeverFacing") uses.add("pocketmine\\block\\utils\\LeverFacing");
+      else if (cls === "RailConnectionType") uses.add("pocketmine\\block\\utils\\RailConnectionType");
+      else if (cls === "DyeColor") uses.add("pocketmine\\block\\utils\\DyeColor");
+      chain += `\n    ->${setter}(${cls}::${val})`;
+    } else if (prop.type === "range") {
+      const setter = "set" + prop.key.charAt(0).toUpperCase() + prop.key.slice(1);
+      chain += `\n    ->${setter}(${val})`;
+    }
+  });
+
+  const useLines = [...uses].sort().map(u =>
+    `<span class="kw">use</span> <span class="cls">${u}</span>;`
+  ).join("\n");
+
+  const blockCode = `<span class="fn">$block</span> = <span class="cls">VanillaBlocks</span>::<span class="fn">${selectedBlock.pm5}</span>()${chain ? chain.replace(/->/g, '<span class="cm">-></span>').replace(/\(true\)/g, '(<span class="bool">true</span>)').replace(/\(false\)/g, '(<span class="bool">false</span>)').replace(/\((\d+)\)/g, '(<span class="num">$1</span>)').replace(/(Facing|Axis|SlabType|WallConnectionType|BellAttachmentType|LeverFacing|RailConnectionType|DyeColor)::(\w+)/g, '<span class="cls">$1</span>::<span class="str">$2</span>') : ""};`;
+
+  output.innerHTML = `${useLines}\n\n${blockCode}\n\n<span class="cm">// Bedrock: ${selectedBlock.id}</span>`;
+
+  // Store plain text for copy
+  const plainUses = [...uses].sort().map(u => `use ${u};`).join("\n");
+  const plainChain = chain.replace(/\n    /g, "\n    ");
+  output.dataset.plain = `${plainUses}\n\n$block = VanillaBlocks::${selectedBlock.pm5}()${plainChain};\n\n// Bedrock: ${selectedBlock.id}`;
+}
+
+// ===== COPY =====
+document.getElementById("copyBtn").addEventListener("click", function() {
+  const code = document.getElementById("codeOutput").dataset.plain;
+  if (!code) return;
+  navigator.clipboard.writeText(code).then(() => {
+    this.classList.add("copied");
+    this.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Copied!`;
+    setTimeout(() => {
+      this.classList.remove("copied");
+      this.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy`;
+    }, 2000);
+  });
+});
+
+// ===== CLOSE EDITOR =====
+document.getElementById("editorClose").addEventListener("click", () => {
+  selectedBlock = null;
+  blockState = {};
+  document.getElementById("editor").classList.remove("visible");
+  document.getElementById("codeWrap").classList.remove("visible");
+  renderBlocks();
+});
+
+// ===== SEARCH =====
+let searchTimeout;
+document.getElementById("search").addEventListener("input", () => {
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => {
+    activeCategory = "All";
+    renderCategories();
+    renderBlocks();
+  }, 150);
+});
+
+// ===== INIT =====
+renderCategories();
+renderBlocks();
+</script>
+
+</body>
+</html>
